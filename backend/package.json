@@ -1,0 +1,27 @@
+{
+  "name": "backend",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "concurrently \"tsc --watch\" \"node --watch-path=./dist --env-file-if-exists=config/.env ./dist/app.js\"",
+    "lint": "npx @biomejs/biome check --write"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "2.2.5",
+    "@tsconfig/recommended": "^1.0.10",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/express": "^5.0.3",
+    "concurrently": "^9.2.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^5.1.0"
+  }
+}
