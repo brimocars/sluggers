@@ -1,13 +1,11 @@
 import express from 'express';
+import data from './data'
 
 const router = express.Router();
 
 router.use(express.static('dist'));
+router.use('/data/players');
 
-
-router.use('/hi', (_, res) => {
-  res.status(200).send({ hi: 'hi' });
-});
 router.use('/', (_, res) => {
   res.status(404).send({ error: 'not found' });
 });
