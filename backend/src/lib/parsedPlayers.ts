@@ -1,4 +1,4 @@
-import playersJson from '../data/players.json';
+import playersJson from '../data/players.json' with { type: 'json'};
 import type { Player } from '../types';
 
 const undraftedPlayers: Player[] = [];
@@ -16,7 +16,7 @@ export function parsePlayers() {
       speedStat: player.speedStat,
       chemistry: player.chemistry,
       isDrafted: false,
-    })
+    });
     allPlayerData.push({
       name: player.name,
       isCaptain: player.isCaptain,
@@ -27,8 +27,8 @@ export function parsePlayers() {
       speedStat: player.speedStat,
       chemistry: player.chemistry,
       isDrafted: false,
-    })
-  })
+    });
+  });
 }
 
 export default undraftedPlayers;

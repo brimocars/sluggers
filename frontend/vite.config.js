@@ -5,7 +5,13 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [vue()],
   build: {
-    outDir: '../backend/dist',
+    outDir: '../backend/dist/dist',
+    emptyOutDir: true,
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
 });

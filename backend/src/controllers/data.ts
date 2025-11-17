@@ -1,7 +1,7 @@
-import type { Request, Response, NextFunction } from 'express';
-import { allPlayerData } from '../lib/parsedPlayers';
+import type { Request, Response } from 'express';
+import { allPlayerData } from '../lib/parsedPlayers.js';
 
-export function getAllPlayers(_req: Request, res: Response, _next: NextFunction) {
+export function getAllPlayers(_req: Request, res: Response) {
   try {
     res.status(200).send({ players: allPlayerData });
   } catch (err) {

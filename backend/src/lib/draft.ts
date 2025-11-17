@@ -1,11 +1,14 @@
-import { managers, shuffleManagers, updateIsStarted } from './managers.js'
+import * as fs from 'node:fs';
+import { managers, shuffleManagers, updateIsStarted } from './managers.js';
 import undraftedPlayers from './parsedPlayers.js';
 import type { Manager } from '../types.js';
+import { emit } from './socket.js';
 
 const draftOrder: Manager[] = [];
 const totalDrafts = undraftedPlayers.length;
 let draftNumber = 0;
 let roundNumber = 0;
+const draftedOrder: string[] = [];
 
 export function startDraft() {
   updateIsStarted(true);
@@ -29,25 +32,48 @@ export function startDraft() {
       }
     }
   }
-  // socketThingHere
+  emit('draftStarted', { shuffledManagers });
 }
 
-export function draftPlayer(playerName: string) {
+export function draftPlayer(playerName: string, managerName: string) {
   const playerToDraft = undraftedPlayers.find((player) => {
     return player.name === playerName;
-  })
+  });
   if (!playerToDraft) {
     console.log(`Failed to draft player ${playerName} because they were drafted already`);
     return;
   }
   playerToDraft.isDrafted = true;
   undraftedPlayers.filter((player) => {
-    return player.name !== playerName
-  })
-  draftOrder.shift()?.players.push(playerToDraft);
+    return player.name !== playerName;
+  });
+  if (managerName !== draftOrder[0].name) {
+    throw new Error(`Failed to draft for manager ${managerName} because it is ${draftOrder[0].name}'s turn.`);
+  }
+  const draftingManager = draftOrder.shift();
+  draftingManager?.players.push(playerToDraft);
+  draftedOrder.push(playerToDraft.name);
+
   draftNumber++;
   if (managers.length % draftNumber === 0) {
-    roundNumber++; 
+    roundNumber++;
   }
-  // socket thing here.
+  emit('playerDrafted', {
+    newRoundNumber: roundNumber,
+    newDraftNumber: draftNumber,
+    nextDrafter: draftOrder[0] ?? undefined,
+    draftedPlayer: playerName,
+    updatedManager: draftingManager,
+  });
+  if (!draftOrder.length) {
+    endDraft();
+  }
+}
+
+function endDraft() {
+  emit('draftEnded', {
+    managers,
+  });
+  const filePath = `../../output/managers-${Date.now()}.json`;
+  fs.writeFile(filePath, JSON.stringify(managers), () => {});
 }

@@ -1,4 +1,5 @@
 import type { Manager } from '../types';
+import { emit } from './socket.js';
 
 export const managers: Manager[] = [];
 let isStarted = false;
@@ -15,7 +16,8 @@ export function addManager(name: string) {
     return manager.name === name;
   });
   if (!existingManager) {
-    managers.push({ name, players: []});
+    managers.push({ name, players: [] });
+    emit('managerJoined', managers);
   }
 }
 
@@ -32,4 +34,9 @@ function shuffleArray<T>(array: T[]): T[] {
 
 export function shuffleManagers(): Manager[] {
   return shuffleArray(managers);
+}
+
+export function clearManagers() {
+  managers.length = 0;
+  emit('clearedManagers', managers);  
 }

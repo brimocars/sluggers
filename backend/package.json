@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "concurrently \"tsc --watch\" \"node --watch-path=./dist --env-file-if-exists=config/.env ./dist/app.js\"",
+    "dev": "concurrently \"tsc --watch\" \"node --watch-path=./dist ./dist/app.js\"",
     "lint": "npx @biomejs/biome check --write"
   },
   "keywords": [],
