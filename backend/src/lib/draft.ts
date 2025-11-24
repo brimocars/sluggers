@@ -5,12 +5,12 @@ import type { Manager } from '../types.js';
 import { emit } from './socket.js';
 
 const draftOrder: Manager[] = [];
-const totalDrafts = undraftedPlayers.length;
 let draftNumber = 0;
 let roundNumber = 0;
 const draftedOrder: string[] = [];
 
 export function startDraft() {
+  const totalDrafts = undraftedPlayers.length;
   updateIsStarted(true);
   const shuffledManagers = shuffleManagers();
   let nextIndex = 0;
@@ -32,7 +32,12 @@ export function startDraft() {
       }
     }
   }
-  emit('draftStarted', { shuffledManagers });
+  emit('draftStarted', {
+    shuffledManagers,
+    newRoundNumber: roundNumber,
+    newDraftNumber: draftNumber,
+    nextDrafter: draftOrder[0],
+  });
 }
 
 export function draftPlayer(playerName: string, managerName: string) {

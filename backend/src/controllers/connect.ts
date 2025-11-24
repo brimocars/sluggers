@@ -9,6 +9,9 @@ export function connectManager(req: Request, res: Response) {
       res.status(401).send();
     }
     lib.addManager(managerName);
+    // lib.addManager('TEST1');
+    // lib.addManager('TEST2');
+    // lib.addManager('TEST3');
     res.status(200).send({ message: `added manager ${managerName}` });
   } catch (err) {
     console.log(`Error adding manager ${err}`);
@@ -19,6 +22,7 @@ export function connectManager(req: Request, res: Response) {
 export function clearManagers(req: Request, res: Response) {
   try {
     lib.clearManagers();
+    console.log('Resetting all managers')
     res.status(200).send();
   } catch (err) {
     console.log(`Error clearing managers ${err}`);

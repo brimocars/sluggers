@@ -1,7 +1,6 @@
 import { io } from 'socket.io-client';
 import { reactive } from 'vue';
 
-// "undefined" means the URL will be computed from the `window.location` object
 const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:3000';
 
 export const socket = io(URL);
@@ -16,7 +15,6 @@ export const socketService = reactive({
   draftedPlayer: '',
   updatedManager: null,
   ended: false,
-  // emit: socket.emit.bind(socket),
 });
 
 socket.on('connect', () => {
@@ -31,10 +29,10 @@ socket.on('managerJoined', (managers) => {
   socketService.managers = managers;
 });
 
-socket.on('draftStarted', (shuffledManagers) => {
+socket.on('draftStarted', (data) => {
   socketService.started = true;
-  socketService.managers = shuffledManagers
-  // TODO: need the nextDrafter here. and probably the newRoudn and such.
+  socketService.managers = data.shuffledManagers
+  socketService.nextDrafter = data.nextDrafter;
 });
 
 socket.on('playerDrafted', (data) => {
@@ -42,7 +40,7 @@ socket.on('playerDrafted', (data) => {
   socketService.newDraftNumber = data.newDraftNumber;
   socketService.nextDrafter = data.nextDrafter;
   socketService.draftedPlayer = data.draftedPlayer;
-  const managerIndexToUpdate = socketService.managers.indexOf((manager) => manager.name === data.updatedManager.name)
+  const managerIndexToUpdate = socketService.managers.map((manager) => manager.name).indexOf(data.updatedManager.name);
   socketService.managers[managerIndexToUpdate] = data.updatedManager; 
 })
 

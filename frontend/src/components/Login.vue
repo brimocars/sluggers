@@ -59,4 +59,7 @@ label {
   text-align: left;
   font-size: 1.5em;
 }
+button {
+  font-size: 1.5rem;
+}
 </style>

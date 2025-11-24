@@ -25,7 +25,7 @@ export async function getAllPlayers() {
       method: 'GET',
     });
     const data = await response.json();
-    return data;
+    return data.players;
   } catch (err) {
     console.log(`Error getting all players: ${err}`);
   }

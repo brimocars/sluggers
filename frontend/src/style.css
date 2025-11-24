@@ -26,7 +26,7 @@ button {
 button:hover {
   border: 1px solid black;
   border-radius: 15px;
-  transform: rotate(1deg);
+  transform: rotate(0.5deg);
 }
 
 #app {
