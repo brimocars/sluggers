@@ -9,9 +9,6 @@ export function connectManager(req: Request, res: Response) {
       res.status(401).send();
     }
     lib.addManager(managerName);
-    // lib.addManager('TEST1');
-    // lib.addManager('TEST2');
-    // lib.addManager('TEST3');
     res.status(200).send({ message: `added manager ${managerName}` });
   } catch (err) {
     console.log(`Error adding manager ${err}`);

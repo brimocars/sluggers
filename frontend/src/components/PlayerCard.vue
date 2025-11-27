@@ -1,6 +1,7 @@
 <template>
+  <button id="toggleButton" @click="emit('toggleShowStats')">{{ buttonText }}</button>
   <div
-    v-if="player"
+    v-if="player && showStats"
     class="player-card"
   >
     <h4>{{player.name}}</h4>
@@ -15,14 +16,23 @@
   </div>
 </template>
 <script setup>
+import { computed } from 'vue';
 import Stat from './Stat.vue';;
 
+const emit = defineEmits(['toggleShowStats'])
 const props = defineProps({
   player: {
     type: Object,
     required: true,
   },
+  showStats: {
+    type: Boolean,
+    required: true,
+  }
 });
+const buttonText = computed(() => {
+  return props.showStats ? '-' : '+';
+})
 </script>
 
 <style scoped>
@@ -31,5 +41,12 @@ h4 {
 }
 #abilities {
   margin-top: 5px;
+}
+#toggleButton {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 0px;
+  margin: 4px;
 }
 </style>

@@ -1,4 +1,5 @@
 import playersJson from '../data/players.json' with { type: 'json'};
+// import playersJson from '../data/short.json' with { type: 'json'};
 import type { Player } from '../types';
 
 let undraftedPlayers: Player[] = [];

@@ -1,8 +1,10 @@
 import * as fs from 'node:fs';
+import path from 'node:path';
 import { managers, shuffleManagers, updateIsStarted } from './managers.js';
 import undraftedPlayers from './parsedPlayers.js';
 import type { Manager } from '../types.js';
 import { emit } from './socket.js';
+const __dirname = import.meta.dirname;
 
 const draftOrder: Manager[] = [];
 let draftNumber = 0;
@@ -60,7 +62,7 @@ export function draftPlayer(playerName: string, managerName: string) {
   draftedOrder.push(playerToDraft.name);
 
   draftNumber++;
-  if (managers.length % draftNumber === 0) {
+  if (draftNumber % managers.length === 0) {
     roundNumber++;
   }
   emit('playerDrafted', {
@@ -79,6 +81,6 @@ function endDraft() {
   emit('draftEnded', {
     managers,
   });
-  const filePath = `../../output/managers-${Date.now()}.json`;
-  fs.writeFile(filePath, JSON.stringify(managers), () => {});
+  const filePath = path.join(__dirname, '..', '..', 'output', `managers-${Date.now()}.json`);
+  fs.writeFile(filePath, JSON.stringify(managers), (err) => { if (err) console.log(`error writing output file: ${err}`)});
 }

@@ -8,9 +8,12 @@
       </div>
       <div
         id="hoveredInfo"
+        :style="{ height: showStats ? '250px' : '32px' }"
       >
         <player-card
           :player="hoverPlayer"
+          :show-stats="showStats"
+          @toggle-show-stats="showStats = !showStats"
         />
       </div>
     </div>
@@ -21,6 +24,8 @@
         :manager="manager"
         :is-this-manager="manager.name === managerName"
         :is-drafting="manager.name === nextDrafter?.name"
+        :hover-player="hoverPlayer"
+        @hover-start="hoverStart"
       />
     </div>
     <div
@@ -32,11 +37,13 @@
         @mouseenter="() => hoverStart(player)"
         class="player"
         :class="{ 'drafted': player.isDrafted, 'chem-highlight': !player.isDrafted && hoverPlayer?.chemistry?.includes(player.name) }"
+        :style="{ cursor: isCurrentDrafter ? 'pointer' : 'not-allowed' }"
       >
+        <span class="captain" :class="{ 'show': player.isCaptain }" ></span>
         <span class="player-name">
           {{ player.name }}
         </span>
-        <span class="chemistry" :class="{ 'show': hoverPlayer?.chemistry?.includes(player.name) }" ></span>
+        <span class="chemistry" :class="{ 'show': hoverPlayer?.chemistry?.includes(player.name) }" >♪</span>
       </div>
     </div>
   </div>
@@ -54,6 +61,7 @@ const roundNumber = ref(0);
 const draftNumber = ref(0);
 const nextDrafter = ref(socket.nextDrafter);
 const hoverPlayer = ref(null);
+const showStats = ref(true);
 
 const props = defineProps({
   managerName: {
@@ -66,7 +74,7 @@ const props = defineProps({
   }
 });
 const isCurrentDrafter = computed(() => {
-  return props.managerName === nextDrafter.name;
+  return props.managerName === nextDrafter.value.name;
 })
 onMounted(async () => {
   players.value = await api.getAllPlayers();
@@ -135,8 +143,8 @@ const draftPlayer = async (player) => {
   align-content: center;
   cursor: pointer;
   display: grid;
-  grid-template-columns: 1fr 16px;
-  grid-template-rows: 1fr 16px;
+  grid-template-columns: 16px 1fr 16px;
+  grid-template-rows: 16px 1fr 16px;
   justify-content: center;
   align-items: center;
 }
@@ -158,7 +166,6 @@ const draftPlayer = async (player) => {
 #hoveredInfo {
   grid-column: 2 / 3;
   background-color: #ffccee;
-  height: 250px;
   width: 200px;
   position: fixed;
   justify-self: right;
@@ -167,22 +174,33 @@ const draftPlayer = async (player) => {
   width: 10px;
   height: 10px;
   background-color: #55cc99;
-  grid-row: 2 / 3;
-  grid-column: 2 / 3;
+  color: #222222;
+  grid-row: 3 / 4;
+  grid-column: 3 / 4;
   margin: 3px;
+  padding-bottom: 4px;
   visibility: hidden;
 }
-.show {
-  visibility: visible;
-}
 .player-name {
-  grid-row: 1 / 3;
-  grid-column: 1 / 3;
+  grid-row: 1 / 4;
+  grid-column: 1 / 4;
+}
+.captain {
+  width: 10px;
+  height: 10px;
+  background-color: #eedd33;
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
+  margin: 3px;
+  visibility: hidden;
 }
 .drafted {
   background-color: #555555;
 }
 .chem-highlight {
   background-color: #999999;
+}
+.show {
+  visibility: visible;
 }
 </style>
